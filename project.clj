@@ -3,4 +3,5 @@
   :url "http://github.com/quandrum/lein-gh-pages"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :eval-in-leiningen true)
+  :eval-in-leiningen true
+  :dependencies [[org.clojars.mstump/clj-jgit "0.0.4"]])
