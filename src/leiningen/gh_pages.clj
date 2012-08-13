@@ -15,5 +15,4 @@
        (case task
          "new"      (apply pages/new-pages project-or-nil root-dir args)
          "push"     (apply push root-dir args)
-         (help/unknown task)))
-   (shutdown-agents)))
+         (help/unknown task)))))
