@@ -8,4 +8,5 @@
     (let [repo-dir (get-dir root-dir)
           repo (find-repo repo-dir)]
         ((jgit/git-checkout repo "gh-pages")
-         (jgit/git-status repo))))
+         (jgit/git-status push)
+         (jgit/git-checkout repo "master")))
