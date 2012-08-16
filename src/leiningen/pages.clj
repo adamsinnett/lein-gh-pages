@@ -1,5 +1,7 @@
 (ns leiningen.gh-pages.pages
-  (:require clj-jgit.porcelain :as jgit))
+  (:require [clj-jgit.porcelain :as jgit]
+            [fs.core :as fs]
+            [pulp.core as :pulp]))
 
 (defn- find-repo
   "Return a repository object for the root-dir"
@@ -34,7 +36,7 @@
 (defn- template-or-default?
   [template-or-nil]
   (if (nil? template-or-nil)
-    ({:template "default") 
+    ({:template "git@github.com:quandrum/base-template.git") 
     ({:template template-or-nil})))
 
 (defn- gh-pages-exists?
@@ -48,7 +50,14 @@
     "Create a gh-pages branch in the current repo"
     [repo]
     (jgit/git-branch-create repo "gh-pages))
-        
+
+(defn- generate-site
+  [repo project template]
+  ((jgit/git-checkout repo "gh-pages" "--orphan")
+   (fs/delete (fs/file "."))
+   (jgit/git-clone template)
+   (pulp/gen-site template ".")))
+
 (defn new-pages
     "Generate a new pages directory and populate it with a pulp template"
     [project-or-nil root-dir template & args]
@@ -61,4 +70,5 @@
           (if (gh-pages-exists? branches)
               ((prn "Github pages branch already exists) (System/exit 1))
               ((create-gh-pages-branch repo)
-               (generate-site repo project template)))))
+               (generate-site repo project template)
+               (jgit/git-checkout repo "master")))))
